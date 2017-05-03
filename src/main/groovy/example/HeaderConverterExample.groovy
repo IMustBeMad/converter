@@ -1,22 +1,16 @@
 package example
 
 import Source.Source
-import converter.CoreConverter
+import converter.HeaderConverter
 import defaults.DefaultConverter
 import groovy.xml.MarkupBuilder
-import object.IsdResult
 import object.ParseResult
 
-class SimpleConverterExample extends DefaultConverter implements CoreConverter {
+class HeaderConverterExample extends DefaultConverter implements HeaderConverter {
 
     @Override
     ParseResult parse() {
         return null
-    }
-
-    @Override
-    IsdResult getIsdResult() {
-        return super.getIsdResult()
     }
 
     @Override
@@ -25,7 +19,7 @@ class SimpleConverterExample extends DefaultConverter implements CoreConverter {
     }
 
     @Override
-    void createItems(MarkupBuilder xml, boolean isd) {
+    void createItems(File file, boolean isd) {
 
     }
 

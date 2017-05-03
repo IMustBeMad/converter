@@ -3,8 +3,6 @@ package example
 import Source.Source
 import defaults.SplitConverter
 import groovy.xml.MarkupBuilder
-import object.IsdResult
-
 
 class SplitConverterExample extends SplitConverter implements converter.SplitConverter {
 
@@ -24,17 +22,12 @@ class SplitConverterExample extends SplitConverter implements converter.SplitCon
     }
 
     @Override
-    IsdResult getIsdResult() {
-        return super.getIsdResult()
-    }
-
-    @Override
     String createXml(File file) {
         return null
     }
 
     @Override
-    void createItems(MarkupBuilder xml, boolean isd) {
+    void createItems(File file, boolean isd) {
 
     }
 

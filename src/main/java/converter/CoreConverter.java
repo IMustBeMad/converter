@@ -20,7 +20,7 @@ public interface CoreConverter extends CommonXmlFunctionality {
 
     String createXml(File file);
 
-    void createItems(MarkupBuilder xml, boolean isd);
+    void createItems(File file, boolean isd);
 
     void createItem(MarkupBuilder xml, Source itemSource);
 }
