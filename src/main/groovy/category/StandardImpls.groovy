@@ -1,7 +1,7 @@
 package category
 
-import Source.SimpleSource
-import Source.Source
+import source.SimpleSource
+import source.Source
 
 import java.nio.charset.Charset
 import java.nio.file.Files

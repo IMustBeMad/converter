@@ -1,4 +1,4 @@
-package Source;
+package source;
 
 public class SimpleSource implements Source {
     private String[] fields;

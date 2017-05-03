@@ -1,6 +1,6 @@
 package example
 
-import Source.Source
+import source.Source
 import converter.CoreConverter
 import defaults.DefaultConverter
 import groovy.xml.MarkupBuilder

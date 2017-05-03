@@ -1,6 +1,6 @@
 package example
 
-import Source.Source
+import source.Source
 import category.StandardImpls
 import converter.CoreConverter
 import defaults.DefaultConverter
@@ -10,7 +10,7 @@ import object.ParseResult
 
 class UnifiedConverterExample extends DefaultConverter implements CoreConverter {
     List<Closure> conditions = [
-            { String[] line -> line[0] },
+            { String[] line -> line[0] }
     ]
 
     Closure exceptionClosure = { String[] line -> line[1] == 'exception' }

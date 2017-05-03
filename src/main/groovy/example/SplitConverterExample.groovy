@@ -1,6 +1,6 @@
 package example
 
-import Source.Source
+import source.Source
 import defaults.SplitConverter
 import groovy.xml.MarkupBuilder
 

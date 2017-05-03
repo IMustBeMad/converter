@@ -1,6 +1,6 @@
 package converter;
 
-import Source.Source;
+import source.Source;
 import groovy.xml.MarkupBuilder;
 import object.IsdResult;
 import object.LcResult;
