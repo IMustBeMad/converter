@@ -14,12 +14,12 @@ class HeaderConverterExample extends DefaultConverter implements HeaderConverter
     }
 
     @Override
-    String createXml(File file) {
+    String createXml(File file, boolean isd) {
         return null
     }
 
     @Override
-    void createItems(File file, boolean isd) {
+    void createItems(MarkupBuilder xml, File file, boolean isd) {
 
     }
 

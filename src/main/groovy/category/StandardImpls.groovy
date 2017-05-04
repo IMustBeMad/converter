@@ -11,14 +11,6 @@ import java.util.stream.Stream
 
 class StandardImpls {
 
-    static Source toSource(String line, String separator = ',') {
-        new SimpleSource().with {
-            it.setFields(line.split(separator))
-
-            return it
-        }
-    }
-
     static Stream<String> toStream(File self, String charset = 'UTF-8') {
         try {
             return Files.lines(Paths.get(self.getPath()), Charset.forName(charset))
@@ -27,21 +19,36 @@ class StandardImpls {
         }
     }
 
-    static Stream<Source> filter(Stream<Source> self, List<Closure> predicates) {
-        predicates.each { it -> self.filter(it as Predicate) }
+    static Source toSource(String self, String separator = ',') {
+        return new SimpleSource().with {
+            it.setFields(self.split(separator))
 
-        return self
-    }
-
-    static <T> Stream<T> throwExceptionOn(Stream<T> self, Closure condition, Exception exception) {
-        if (self.anyMatch(condition as Predicate)) {
-            throw exception
+            return it
         }
-
-        return self
     }
 
-    static <T> Stream<T> throwRuntimeExceptionOn(Stream<T> self, Closure condition) {
-        return throwExceptionOn(self, condition, new RuntimeException('test'))
+    //todo list of closures to one predicate
+    static Predicate toPredicate(List<Closure> self) {
+        return self.&every as Predicate
     }
+
+
+    //todo to handle exceptions
+//    static Stream<Source> filter(Stream<Source> self, List<Closure> predicates) {
+//        predicates.each { it -> self.filter(it as Predicate) }
+//
+//        return self
+//    }
+
+//    static <T> Stream<T> throwExceptionOn(Stream<T> self, Closure condition, Exception exception) {
+//        if (self.anyMatch(condition as Predicate)) {
+//            throw exception
+//        }
+//
+//        return self
+//    }
+//
+//    static <T> Stream<T> throwRuntimeExceptionOn(Stream<T> self, Closure condition) {
+//        return throwExceptionOn(self, condition, new RuntimeException('test'))
+//    }
 }

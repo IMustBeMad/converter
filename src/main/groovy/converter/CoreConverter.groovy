@@ -16,9 +16,9 @@ trait CoreConverter extends CommonXmlFunctionality {
         return null
     }
 
-    abstract String createXml(File file)
+    abstract String createXml(File file, boolean isd)
 
-    abstract void createItems(File file, boolean isd)
+    abstract void createItems(MarkupBuilder xml, File file, boolean isd)
 
     abstract void createItem(MarkupBuilder xml, Source itemSource)
 }

@@ -1,12 +1,14 @@
 package example
 
-import source.Source
 import category.StandardImpls
 import converter.CoreConverter
 import defaults.DefaultConverter
 import groovy.xml.MarkupBuilder
 import groovy.xml.MarkupBuilderHelper
 import object.ParseResult
+import source.Source
+
+import java.util.stream.Collectors
 
 class UnifiedConverterExample extends DefaultConverter implements CoreConverter {
     List<Closure> conditions = [
@@ -21,26 +23,32 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     }
 
     @Override
-    String createXml(File file) {
-        return null
-    }
-
-    @Override
-    void createItems(File file, boolean isd) {
+    String createXml(File file, boolean isd) {
         StringWriter writer = new StringWriter()
         MarkupBuilder xml = new MarkupBuilder(writer)
         MarkupBuilderHelper helper = new MarkupBuilderHelper(xml)
         helper.xmlDeclaration([version: '1.0', encoding: 'UTF-8'])
 
+        xml.ORDER_FILE {
+            createItems(xml, file, isd)
+        }
+
+        return writer.toString()
+    }
+
+    //todo to make three implementations (eachLiner, lazyBlocker, blocker)
+    @Override
+    void createItems(MarkupBuilder xml, File file, boolean isd) {
+
         use(StandardImpls) {
             file.toStream('UTF-8')
-                .map(this.&toSource)
-                .filter(conditions)
-                .throwRuntimeExceptionOn(exceptionClosure)
-                .forEach({
-                    createItem(xml, it)
-                    writer.toString()
-                })
+                .map { it.toSource() }
+                .filter { conditions.toPredicate() }
+                .collect(Collectors.toList())
+//                .throwRuntimeExceptionOn(exceptionClosure)
+//                .forEach({
+//                    createItem(xml, it)
+//                })
         }
     }
 
