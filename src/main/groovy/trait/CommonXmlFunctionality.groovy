@@ -9,5 +9,4 @@ trait CommonXmlFunctionality {
     String toFredDate() {
         return 'fredDate'
     }
-
 }
