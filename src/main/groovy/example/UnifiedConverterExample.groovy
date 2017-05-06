@@ -3,19 +3,21 @@ package example
 import category.StandardImpls
 import converter.CoreConverter
 import defaults.DefaultConverter
+import exception.ParserException
+import exception.PipelineException
 import groovy.xml.MarkupBuilder
 import groovy.xml.MarkupBuilderHelper
 import object.ParseResult
 import source.Source
 
-import java.util.stream.Collectors
-
 class UnifiedConverterExample extends DefaultConverter implements CoreConverter {
     List<Closure> conditions = [
-            { Source source -> source.getFields()[0] }
+            { Source source -> source.fields[0] }
     ]
 
-    Closure exceptionClosure = { String[] line -> line[1] == 'exception' }
+    List<Closure> exceptions = [
+            { Source source -> source.fields[1] == 'exception' }
+    ]
 
     @Override
     ParseResult parse() {
@@ -41,19 +43,27 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     void createItems(MarkupBuilder xml, File file, boolean isd) {
 
         use(StandardImpls) {
-            file.toStream('UTF-8')
-                .map { it.toSource() }
-                .filter { conditions.toPredicate(it) }
-                .collect(Collectors.toList())
-//                .throwRuntimeExceptionOn(exceptionClosure)
-//                .forEach({
-//                    createItem(xml, it)
-//                })
+            try {
+                file.toStream('UTF-8')
+                    .map { it.toSource() }
+                    .filter { conditions.toPredicate(it) }
+                    .forEach { createItem(xml, it) }
+            } catch (PipelineException e) {
+                throw new ParserException(e)
+            }
         }
     }
 
     @Override
-    void createItem(MarkupBuilder xml, Source itemSource) {
+    void createItem(MarkupBuilder xml, Source source) {
+        use(StandardImpls) {
+            if (source.isExceptionalBy(exceptions)) {
+                throw new PipelineException("exception by logic")
+            }
+        }
 
+        xml.ORDER {
+            //fill order
+        }
     }
 }

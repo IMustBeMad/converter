@@ -1,5 +1,6 @@
 package category
 
+import exception.PipelineException
 import source.SimpleSource
 import source.Source
 
@@ -10,11 +11,11 @@ import java.util.stream.Stream
 
 class StandardImpls {
 
-    static Stream<String> toStream(File self, String charset = 'UTF-8') {
+    static Stream<String> toStream(File self, String charset = 'UTF-8', int skipCount = 0) {
         try {
-            return Files.lines(Paths.get(self.getPath()), Charset.forName(charset))
+            return Files.lines(Paths.get(self.getPath()), Charset.forName(charset)).skip(skipCount)
         } catch (IOException e) {
-            return null
+            throw new PipelineException('failed to create stream from file', e)
         }
     }
 
@@ -30,23 +31,7 @@ class StandardImpls {
         return self.every { it(source) }
     }
 
-
-    //todo to handle exceptions
-//    static Stream<Source> filter(Stream<Source> self, List<Closure> predicates) {
-//        predicates.each { it -> self.filter(it as Predicate) }
-//
-//        return self
-//    }
-
-//    static <T> Stream<T> throwExceptionOn(Stream<T> self, Closure condition, Exception exception) {
-//        if (self.anyMatch(condition as Predicate)) {
-//            throw exception
-//        }
-//
-//        return self
-//    }
-//
-//    static <T> Stream<T> throwRuntimeExceptionOn(Stream<T> self, Closure condition) {
-//        return throwExceptionOn(self, condition, new RuntimeException('test'))
-//    }
+    static boolean isExceptionalBy(Source self, List<Closure> exceptions) {
+        return exceptions.any { it(self) }
+    }
 }
