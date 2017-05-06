@@ -6,7 +6,6 @@ import source.Source
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.function.Predicate
 import java.util.stream.Stream
 
 class StandardImpls {
@@ -27,9 +26,8 @@ class StandardImpls {
         }
     }
 
-    //todo list of closures to one predicate
-    static Predicate toPredicate(List<Closure> self) {
-        return self.&every as Predicate
+    static boolean toPredicate(List<Closure> self, Source source) {
+        return self.every { it(source) }
     }
 
 

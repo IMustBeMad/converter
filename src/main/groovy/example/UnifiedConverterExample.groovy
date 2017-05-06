@@ -12,7 +12,7 @@ import java.util.stream.Collectors
 
 class UnifiedConverterExample extends DefaultConverter implements CoreConverter {
     List<Closure> conditions = [
-            { String[] line -> line[0] }
+            { Source source -> source.getFields()[0] }
     ]
 
     Closure exceptionClosure = { String[] line -> line[1] == 'exception' }
@@ -43,7 +43,7 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
         use(StandardImpls) {
             file.toStream('UTF-8')
                 .map { it.toSource() }
-                .filter { conditions.toPredicate() }
+                .filter { conditions.toPredicate(it) }
                 .collect(Collectors.toList())
 //                .throwRuntimeExceptionOn(exceptionClosure)
 //                .forEach({
