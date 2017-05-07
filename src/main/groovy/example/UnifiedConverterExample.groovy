@@ -5,6 +5,7 @@ import category.StandardImpls
 import converter.CoreConverter
 import defaults.DefaultConverter
 import exception.PipelineException
+import filter.FilterConfig
 import groovy.xml.MarkupBuilder
 import object.ParseResult
 import org.springframework.stereotype.Component
@@ -33,8 +34,10 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     //todo to make three implementations (eachLiner, lazyBlocker, blocker)
     @Override
     void createItems(MarkupBuilder xml, File file, boolean isd) {
+        FilterConfig filterConfig = new FilterConfig(conditions: conditions, skipCount: 0)
+
         use(EachLiner) {
-            file.createItems(xml, this.&createItem, conditions)
+            file.createItems(xml, this.&createItem, filterConfig)
         }
     }
 

@@ -27,15 +27,20 @@ class StandardImpls {
         }
     }
 
-    static boolean toPredicateWith( Source self, List<Closure> conditions, boolean any = false) {
+    static boolean toPredicateWith(Source self, List<Closure> conditions, boolean any = false) {
         return any ? conditions.any { it(self) } : conditions.every { it(self) }
     }
 
-    static boolean toPredicateWith( Source self, boolean skip) {
+    static boolean toPredicateWith(Source self, boolean skip) {
         return skip
     }
 
     static boolean isExceptionalBy(Source self, List<Closure> exceptions, boolean any = true) {
         return any ? exceptions.any { it(self) } : exceptions.every { it(self) }
+    }
+
+    static boolean isExceptionalBy(List<Source> self, List<Closure> exceptions, boolean any = true) {
+        return any ? self.any { source -> exceptions.any { it(source) } }
+                   : self.any { source -> exceptions.every { it(source) } }
     }
 }
