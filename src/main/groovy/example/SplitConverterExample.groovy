@@ -1,9 +1,11 @@
 package example
 
+import org.springframework.stereotype.Component
 import source.Source
 import defaults.SplitConverter
 import groovy.xml.MarkupBuilder
 
+@Component
 class SplitConverterExample extends SplitConverter implements converter.SplitConverter {
 
     @Override

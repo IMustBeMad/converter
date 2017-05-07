@@ -1,11 +1,13 @@
 package example
 
+import org.springframework.stereotype.Component
 import source.Source
 import converter.HeaderConverter
 import defaults.DefaultConverter
 import groovy.xml.MarkupBuilder
 import object.ParseResult
 
+@Component
 class HeaderConverterExample extends DefaultConverter implements HeaderConverter {
 
     @Override

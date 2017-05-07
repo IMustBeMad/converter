@@ -1,15 +1,16 @@
 package example
 
+import beans.EachLiner
 import category.StandardImpls
 import converter.CoreConverter
 import defaults.DefaultConverter
-import exception.ParserException
 import exception.PipelineException
 import groovy.xml.MarkupBuilder
-import groovy.xml.MarkupBuilderHelper
 import object.ParseResult
+import org.springframework.stereotype.Component
 import source.Source
 
+@Component
 class UnifiedConverterExample extends DefaultConverter implements CoreConverter {
     List<Closure> conditions = [
             { Source source -> source.fields[0] }
@@ -26,31 +27,14 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
 
     @Override
     String createXml(File file, boolean isd) {
-        StringWriter writer = new StringWriter()
-        MarkupBuilder xml = new MarkupBuilder(writer)
-        MarkupBuilderHelper helper = new MarkupBuilderHelper(xml)
-        helper.xmlDeclaration([version: '1.0', encoding: 'UTF-8'])
-
-        xml.ORDER_FILE {
-            createItems(xml, file, isd)
-        }
-
-        return writer.toString()
+        viaMarkupBuilder(this.&createItems, file, isd)
     }
 
     //todo to make three implementations (eachLiner, lazyBlocker, blocker)
     @Override
     void createItems(MarkupBuilder xml, File file, boolean isd) {
-
-        use(StandardImpls) {
-            try {
-                file.toStream('UTF-8')
-                    .map { it.toSource() }
-                    .filter { conditions.toPredicate(it) }
-                    .forEach { createItem(xml, it) }
-            } catch (PipelineException e) {
-                throw new ParserException(e)
-            }
+        use(EachLiner) {
+            file.createItems(xml, this.&createItem, conditions)
         }
     }
 
@@ -61,9 +45,11 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
                 throw new PipelineException("exception by logic")
             }
         }
+        String[] fields = source.getFields()
 
         xml.ORDER {
-            //fill order
+            NUMBER(fields[0])
+            TEXT(fields[1])
         }
     }
 }

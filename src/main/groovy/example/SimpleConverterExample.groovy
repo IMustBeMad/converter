@@ -1,5 +1,6 @@
 package example
 
+import org.springframework.stereotype.Component
 import source.Source
 import converter.CoreConverter
 import defaults.DefaultConverter
@@ -7,6 +8,7 @@ import groovy.xml.MarkupBuilder
 import object.IsdResult
 import object.ParseResult
 
+@Component
 class SimpleConverterExample extends DefaultConverter implements CoreConverter {
 
     @Override
