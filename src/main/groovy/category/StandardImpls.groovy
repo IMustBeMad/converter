@@ -19,7 +19,7 @@ class StandardImpls {
         }
     }
 
-    static Source toSource(String self, String separator = ',') {
+    static Source toSimpleSource(String self, String separator = ',') {
         return new SimpleSource().with {
             it.setFields(self.split(separator))
 

@@ -1,24 +1,27 @@
 package beans
 
 import category.StandardImpls
+import config.FilterConfig
 import exception.ParserException
 import exception.PipelineException
-import filter.FilterConfig
 import groovy.xml.MarkupBuilder
 
-@Category(File)
 class EachLiner {
 
-    void createItems(MarkupBuilder xml, Closure creationMethod, FilterConfig config) {
+    static void createItems(File self, MarkupBuilder xml, FilterConfig config, Closure<Void> creationMethod) {
         use(StandardImpls) {
             try {
-                this.toStream('UTF-8', config.skipCount)
-                    .map { it.toSource() }
+                self.toStream('UTF-8', config.skipCount)
+                    .map { it.toSimpleSource() }
                     .filter { config.conditions ? it.toPredicateWith(config.conditions) : it.toPredicateWith(true) }
                     .forEach { creationMethod(xml, it) }
             } catch (PipelineException e) {
                 throw new ParserException(e)
             }
         }
+    }
+
+    static Closure withConfig(File self, MarkupBuilder xml, FilterConfig config) {
+        return this.&createItems.curry(self, xml, config)
     }
 }

@@ -1,11 +1,11 @@
 package example
 
-import beans.EachLiner
+import beans.GreedBlocker
 import category.StandardImpls
+import config.FilterConfig
 import converter.CoreConverter
 import defaults.DefaultConverter
 import exception.PipelineException
-import filter.FilterConfig
 import groovy.xml.MarkupBuilder
 import object.ParseResult
 import org.springframework.stereotype.Component
@@ -28,7 +28,7 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
 
     @Override
     String createXml(File file, boolean isd) {
-        viaMarkupBuilder(this.&createItems, file, isd)
+        return viaMarkupBuilder(this.&createItems, file, isd)
     }
 
     //todo to make three implementations (eachLiner, lazyBlocker, blocker)
@@ -36,8 +36,14 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     void createItems(MarkupBuilder xml, File file, boolean isd) {
         FilterConfig filterConfig = new FilterConfig(conditions: conditions, skipCount: 0)
 
-        use(EachLiner) {
-            file.createItems(xml, this.&createItem, filterConfig)
+//        use(EachLiner) {
+//            file.withConfig(xml, filterConfig)
+//                .call(this.&createItem)
+//        }
+
+        use(GreedBlocker) {
+            file.withConfig(xml, filterConfig)
+                .call(this.&createItem, this.&groupingMethod)
         }
     }
 
@@ -54,5 +60,9 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
             NUMBER(fields[0])
             TEXT(fields[1])
         }
+    }
+
+    private static String groupingMethod(Source source) {
+        return source.getFields()[1]
     }
 }
