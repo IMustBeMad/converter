@@ -1,5 +1,10 @@
 package source;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class SimpleSource implements Source {
     private String[] fields;
 
