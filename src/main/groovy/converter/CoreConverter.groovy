@@ -20,5 +20,5 @@ trait CoreConverter extends CommonXmlFunctionality {
 
     abstract void createItems(MarkupBuilder xml, File file, boolean isd)
 
-    abstract void createItem(MarkupBuilder xml, Source itemSource)
+    abstract void createItem(MarkupBuilder xml, Source itemSource, boolean isd)
 }

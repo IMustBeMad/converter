@@ -8,7 +8,7 @@ import groovy.xml.MarkupBuilder
 
 class EachLiner {
 
-    static void createItems(File self, MarkupBuilder xml, FilterConfig config, Class sourceClass,
+    static void createItems(File self, MarkupBuilder xml, FilterConfig config, boolean isd, Class sourceClass,
                             Closure<Void> creationMethod) {
         use(StandardImpls) {
             try {
@@ -16,15 +16,15 @@ class EachLiner {
                     .map { it.toFields() }
                     .filter { config.conditions ? it.toPredicateWith(config.conditions) : it.toPredicateWith(true) }
                     .map { it.toSource(sourceClass) }
-                    .forEach { creationMethod(xml, it) }
+                    .each { creationMethod(xml, it, isd) }
             } catch (PipelineException e) {
                 throw new ParserException(e)
             }
         }
     }
 
-    static Closure withConfig(File self, MarkupBuilder xml, FilterConfig config) {
-        return this.&createItems.curry(self, xml, config)
+    static Closure withConfig(File self, MarkupBuilder xml, FilterConfig config, boolean isd) {
+        return this.&createItems.curry(self, xml, config, isd)
     }
 
     static Closure convertTo(Closure self, Class sourceClass) {

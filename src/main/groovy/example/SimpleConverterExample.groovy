@@ -32,7 +32,7 @@ class SimpleConverterExample extends DefaultConverter implements CoreConverter {
     }
 
     @Override
-    void createItem(MarkupBuilder xml, Source itemSource) {
+    void createItem(MarkupBuilder xml, Source itemSource, boolean isd) {
 
     }
 }

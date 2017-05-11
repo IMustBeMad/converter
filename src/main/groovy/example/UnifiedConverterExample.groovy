@@ -54,7 +54,7 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     }
 
     @Override
-    void createItem(MarkupBuilder xml, Source source) {
+    void createItem(MarkupBuilder xml, Source source, boolean isd) {
         if (source.isExceptionalBy(exceptions)) {
             throw new PipelineException("exception by logic")
         }

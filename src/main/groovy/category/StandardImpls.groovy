@@ -37,8 +37,4 @@ class StandardImpls {
     static Source toSource(List<String[]> fieldsList, Class source) {
         return source.metaClass.invokeConstructor(fieldsList) as Source
     }
-
-    static boolean isExceptionalBy(Source self, List<Closure> exceptions, boolean any = true) {
-        return any ? exceptions.any { it(self) } : exceptions.every { it(self) }
-    }
 }
