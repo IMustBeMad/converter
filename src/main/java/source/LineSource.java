@@ -1,6 +1,11 @@
 package source;
 
-public class SimpleSource implements Source {
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
+public class LineSource implements Source {
     private String[] fields;
 
     @Override

@@ -9,12 +9,13 @@ import exception.PipelineException
 import groovy.xml.MarkupBuilder
 import object.ParseResult
 import org.springframework.stereotype.Component
+import source.BlockSource
 import source.Source
 
 @Component
 class UnifiedConverterExample extends DefaultConverter implements CoreConverter {
     List<Closure> conditions = [
-            { Source source -> source.fields[0] }
+            { String[] fields -> fields[0] }
     ]
 
     List<Closure> exceptions = [
@@ -38,12 +39,14 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
 
 //        use(EachLiner) {
 //            file.withConfig(xml, filterConfig)
-//                .call(this.&createItem)
+//                .convertTo(LineSource.class)
+//                .createItemsBy(this.&createItem)
 //        }
 
         use(GreedBlocker) {
             file.withConfig(xml, filterConfig)
-                .call(this.&createItem, this.&groupingMethod)
+                .convertTo(BlockSource.class)
+                .createItemsBy(this.&createItem, this.&groupingMethod)
         }
     }
 
