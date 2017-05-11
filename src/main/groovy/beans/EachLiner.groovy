@@ -24,4 +24,8 @@ class EachLiner {
     static Closure withConfig(File self, MarkupBuilder xml, FilterConfig config) {
         return this.&createItems.curry(self, xml, config)
     }
+
+    static Closure createItemsBy(Closure self, Closure creationMethod) {
+        return self(creationMethod)
+    }
 }

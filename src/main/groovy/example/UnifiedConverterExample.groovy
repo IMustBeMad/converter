@@ -38,12 +38,12 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
 
 //        use(EachLiner) {
 //            file.withConfig(xml, filterConfig)
-//                .call(this.&createItem)
+//                .createItemsBy(this.&createItem)
 //        }
 
         use(GreedBlocker) {
             file.withConfig(xml, filterConfig)
-                .call(this.&createItem, this.&groupingMethod)
+                .createItemsBy(this.&createItem, this.&groupingMethod)
         }
     }
 
