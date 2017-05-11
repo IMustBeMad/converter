@@ -36,7 +36,7 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     }
 
     //todo to make three implementations (eachLiner, lazyBlocker, blocker)
-    //todo other settings can be add to FilterConfig, class can be renamed to StreamConfig
+    //todo other settings can be added to FilterConfig, class can be renamed to StreamConfig
     @Override
     void createItems(MarkupBuilder xml, File file, boolean isd) {
         FilterConfig filterConfig = new FilterConfig(conditions: conditions, skipCount: 0)
