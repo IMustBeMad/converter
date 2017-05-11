@@ -1,11 +1,13 @@
 package example
 
+import org.springframework.stereotype.Component
 import source.Source
 import converter.HeaderConverter
 import defaults.DefaultConverter
 import groovy.xml.MarkupBuilder
 import object.ParseResult
 
+@Component
 class HeaderConverterExample extends DefaultConverter implements HeaderConverter {
 
     @Override
@@ -14,12 +16,12 @@ class HeaderConverterExample extends DefaultConverter implements HeaderConverter
     }
 
     @Override
-    String createXml(File file) {
+    String createXml(File file, boolean isd) {
         return null
     }
 
     @Override
-    void createItems(File file, boolean isd) {
+    void createItems(MarkupBuilder xml, File file, boolean isd) {
 
     }
 

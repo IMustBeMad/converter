@@ -1,9 +1,11 @@
 package example
 
+import org.springframework.stereotype.Component
 import source.Source
 import defaults.SplitConverter
 import groovy.xml.MarkupBuilder
 
+@Component
 class SplitConverterExample extends SplitConverter implements converter.SplitConverter {
 
     @Override
@@ -22,12 +24,12 @@ class SplitConverterExample extends SplitConverter implements converter.SplitCon
     }
 
     @Override
-    String createXml(File file) {
+    String createXml(File file, boolean isd) {
         return null
     }
 
     @Override
-    void createItems(File file, boolean isd) {
+    void createItems(MarkupBuilder xml, File file, boolean isd) {
 
     }
 

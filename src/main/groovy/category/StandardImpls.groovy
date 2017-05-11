@@ -1,47 +1,46 @@
 package category
 
+import exception.PipelineException
 import source.SimpleSource
 import source.Source
 
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.function.Predicate
 import java.util.stream.Stream
 
 class StandardImpls {
 
-    static Source toSource(String line, String separator = ',') {
-        new SimpleSource().with {
-            it.setFields(line.split(separator))
+    static Stream<String> toStream(File self, String charset = 'UTF-8', int skipCount = 0) {
+        try {
+            return Files.lines(Paths.get(self.getPath()), Charset.forName(charset)).skip(skipCount)
+        } catch (IOException e) {
+            throw new PipelineException('failed to create stream from file', e)
+        }
+    }
+
+    static Source toSimpleSource(String self, String separator = ',') {
+        return new SimpleSource().with {
+            it.setFields(self.split(separator))
 
             return it
         }
     }
 
-    static Stream<String> toStream(File self, String charset = 'UTF-8') {
-        try {
-            return Files.lines(Paths.get(self.getPath()), Charset.forName(charset))
-        } catch (IOException e) {
-            return null
-        }
+    static boolean toPredicateWith(Source self, List<Closure> conditions, boolean any = false) {
+        return any ? conditions.any { it(self) } : conditions.every { it(self) }
     }
 
-    static Stream<Source> filter(Stream<Source> self, List<Closure> predicates) {
-        predicates.each { it -> self.filter(it as Predicate) }
-
-        return self
+    static boolean toPredicateWith(Source self, boolean skip) {
+        return skip
     }
 
-    static <T> Stream<T> throwExceptionOn(Stream<T> self, Closure condition, Exception exception) {
-        if (self.anyMatch(condition as Predicate)) {
-            throw exception
-        }
-
-        return self
+    static boolean isExceptionalBy(Source self, List<Closure> exceptions, boolean any = true) {
+        return any ? exceptions.any { it(self) } : exceptions.every { it(self) }
     }
 
-    static <T> Stream<T> throwRuntimeExceptionOn(Stream<T> self, Closure condition) {
-        return throwExceptionOn(self, condition, new RuntimeException('test'))
+    static boolean isExceptionalBy(List<Source> self, List<Closure> exceptions, boolean any = true) {
+        return any ? self.any { source -> exceptions.any { it(source) } }
+                   : self.any { source -> exceptions.every { it(source) } }
     }
 }
