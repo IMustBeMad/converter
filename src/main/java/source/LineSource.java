@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class SimpleSource implements Source {
+public class LineSource implements Source {
     private String[] fields;
 
     @Override

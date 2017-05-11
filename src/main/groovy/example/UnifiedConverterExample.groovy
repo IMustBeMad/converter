@@ -1,6 +1,5 @@
 package example
 
-import beans.EachLiner
 import beans.GreedBlocker
 import category.StandardImpls
 import config.FilterConfig
@@ -10,8 +9,7 @@ import exception.PipelineException
 import groovy.xml.MarkupBuilder
 import object.ParseResult
 import org.springframework.stereotype.Component
-import source.ComplicatedSource
-import source.SimpleSource
+import source.BlockSource
 import source.Source
 
 @Component
@@ -39,15 +37,15 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     void createItems(MarkupBuilder xml, File file, boolean isd) {
         FilterConfig filterConfig = new FilterConfig(conditions: conditions, skipCount: 0)
 
-        use(EachLiner) {
-            file.withConfig(xml, filterConfig)
-                .convertTo(SimpleSource.class)
-                .createItemsBy(this.&createItem)
-        }
+//        use(EachLiner) {
+//            file.withConfig(xml, filterConfig)
+//                .convertTo(LineSource.class)
+//                .createItemsBy(this.&createItem)
+//        }
 
         use(GreedBlocker) {
             file.withConfig(xml, filterConfig)
-                .convertTo(ComplicatedSource.class)
+                .convertTo(BlockSource.class)
                 .createItemsBy(this.&createItem, this.&groupingMethod)
         }
     }

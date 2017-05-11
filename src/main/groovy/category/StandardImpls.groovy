@@ -38,29 +38,7 @@ class StandardImpls {
         return source.metaClass.invokeConstructor(fieldsList) as Source
     }
 
-//    static boolean toPredicateWith(Source self, List<Closure> conditions, boolean any = false) {
-//        return any ? conditions.any { it(self) } : conditions.every { it(self) }
-//    }
-//
-//    static boolean toPredicateWith(Source self, boolean skip) {
-//        return skip
-//    }
-
-//    static boolean isExceptionalBy(String[] self, List<Closure> exceptions, boolean any = true) {
-//        return any ? exceptions.any { it(self) } : exceptions.every { it(self) }
-//    }
-
-//    static boolean isExceptionalBy(Source self, List<Closure> exceptions, boolean any = true) {
-//        return any ? self.any { source -> exceptions.any { it(source) } }
-//                   : self.any { source -> exceptions.every { it(source) } }
-//    }
-
     static boolean isExceptionalBy(Source self, List<Closure> exceptions, boolean any = true) {
         return any ? exceptions.any { it(self) } : exceptions.every { it(self) }
     }
-//
-//    static boolean isExceptionalBy(List<Source> self, List<Closure> exceptions, boolean any = true) {
-//        return any ? self.any { source -> exceptions.any { it(source) } }
-//                   : self.any { source -> exceptions.every { it(source) } }
-//    }
 }
