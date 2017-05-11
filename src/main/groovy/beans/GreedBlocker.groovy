@@ -20,9 +20,9 @@ class GreedBlocker {
                     .filter { config.conditions ? it.toPredicateWith(config.conditions) : it.toPredicateWith(true) }
                     .collect(Collectors.groupingBy(
                         groupingMethod as Function,
-                        Collectors.collectingAndThen(Collectors.toList(), { it.toSource(sourceClass) } as Function)
+                        Collectors.collectingAndThen(Collectors.toList(), { list -> list.toSource(sourceClass) } as Function)
                     ))
-                    .forEach { creationMethod(xml, it) }
+                    .each { entry -> creationMethod(xml, entry.value) }
             } catch (PipelineException e) {
                 throw new ParserException(e)
             }

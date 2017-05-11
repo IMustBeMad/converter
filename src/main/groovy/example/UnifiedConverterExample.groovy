@@ -1,7 +1,6 @@
 package example
 
 import beans.GreedBlocker
-import category.StandardImpls
 import config.FilterConfig
 import converter.CoreConverter
 import defaults.DefaultConverter
@@ -18,8 +17,12 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
             { String[] fields -> fields[0] }
     ]
 
+//    List<Closure> exceptions = [
+//            { LineSource source -> source.fields[1] == 'exception' }
+//    ]
+
     List<Closure> exceptions = [
-            { Source source -> source.fields[1] == 'exception' }
+            { BlockSource source -> source.block.any { it[0] == 'exception' } }
     ]
 
     @Override
@@ -52,20 +55,26 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
 
     @Override
     void createItem(MarkupBuilder xml, Source source) {
-        use(StandardImpls) {
-            if (source.isExceptionalBy(exceptions)) {
-                throw new PipelineException("exception by logic")
-            }
+        if (source.isExceptionalBy(exceptions)) {
+            throw new PipelineException("exception by logic")
         }
-        String[] fields = source.getFields()
 
-        xml.ORDER {
-            NUMBER(fields[0])
-            TEXT(fields[1])
+//        String[] fields = source.fields
+//
+//        xml.ORDER {
+//            NUMBER(fields[0])
+//            TEXT(fields[1])
+//        }
+
+        source.block.each { fields ->
+            xml.ORDER {
+                NUMBER(fields[0])
+                TEXT(fields[1])
+            }
         }
     }
 
-    private static String groupingMethod(Source source) {
-        return source.getFields()[1]
+    private static String groupingMethod(String[] fields) {
+        return fields[0]
     }
 }
