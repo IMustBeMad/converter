@@ -18,8 +18,8 @@ class StandardImpls {
         }
     }
 
-    static String[] toFields(String self, String separator = ',') {
-        return self.split(separator)
+    static String[] toFields(String self, Closure splitMethod, String separator = ',') {
+        return splitMethod(self, separator)
     }
 
     static boolean toPredicateWith(String[] self, List<Closure> conditions, boolean any = false) {

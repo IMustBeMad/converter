@@ -1,34 +1,33 @@
 package beans
 
 import category.StandardImpls
-import config.FilterConfig
+import config.StreamConfig
 import exception.ParserException
 import exception.PipelineException
-import groovy.xml.MarkupBuilder
 
 class EachLiner {
 
-    static void createItems(File self, MarkupBuilder xml, FilterConfig config, boolean isd, Class sourceClass,
+    static void createItems(File self, StreamConfig streamConfig, boolean isd, Class sourceClass,
                             Closure<Void> creationMethod) {
         use(StandardImpls) {
             try {
-                self.toStream('UTF-8', config.skipCount)
-                    .map { it.toFields() }
-                    .filter { config.conditions ? it.toPredicateWith(config.conditions) : it.toPredicateWith(true) }
+                self.toStream(streamConfig.coding, streamConfig.skipCount)
+                    .map { it.toFields(streamConfig.splitMethod, streamConfig.separator) }
+                    .filter { streamConfig.filterConditions ? it.toPredicateWith(streamConfig.filterConditions) : it.toPredicateWith(true) }
                     .map { it.toSource(sourceClass) }
-                    .each { creationMethod(xml, it, isd) }
+                    .each { creationMethod(streamConfig.xml, it, isd) }
             } catch (PipelineException e) {
                 throw new ParserException(e)
             }
         }
     }
 
-    static Closure withConfig(File self, MarkupBuilder xml, FilterConfig config, boolean isd) {
-        return this.&createItems.curry(self, xml, config, isd)
+    static Closure withStreamConfig(File self, StreamConfig streamConfig) {
+        return this.&createItems.curry(self, streamConfig)
     }
 
-    static Closure convertTo(Closure self, Class sourceClass) {
-        return self.curry(sourceClass)
+    static Closure convertTo(Closure self, Class sourceClass, boolean isd = false) {
+        return self.ncurry(1, sourceClass).ncurry(0, isd)
     }
 
     static Closure createItemsBy(Closure self, Closure creationMethod) {
