@@ -23,11 +23,15 @@ class StandardImpls {
     }
 
     static boolean toPredicateWith(String[] self, List<Closure> conditions, boolean any = false) {
+        if (!conditions) {
+            return false
+        }
+
         return any ? conditions.any { it(self) } : conditions.every { it(self) }
     }
 
-    static boolean toPredicateWith(String[] self, boolean skip) {
-        return skip
+    static boolean skipFilter(String[] self) {
+        return true
     }
 
     static Source toSource(String[] self, Class source) {

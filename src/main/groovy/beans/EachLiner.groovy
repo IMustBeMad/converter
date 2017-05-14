@@ -11,9 +11,9 @@ class EachLiner {
                             Closure<Void> creationMethod) {
         use(StandardImpls) {
             try {
-                self.toStream(streamConfig.coding, streamConfig.skipCount)
+                self.toStream(streamConfig.charset, streamConfig.skipCount)
                     .map { it.toFields(streamConfig.splitMethod, streamConfig.separator) }
-                    .filter { streamConfig.filterConditions ? it.toPredicateWith(streamConfig.filterConditions) : it.toPredicateWith(true) }
+                    .filter { streamConfig.filterConditions ? it.toPredicateWith(streamConfig.filterConditions) : it.skipFilter() }
                     .map { it.toSource(sourceClass) }
                     .each { creationMethod(streamConfig.xml, it, isd) }
             } catch (PipelineException e) {

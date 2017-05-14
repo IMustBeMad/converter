@@ -1,6 +1,6 @@
 package example
 
-import beans.EachLiner
+import beans.GreedBlocker
 import config.StreamConfig
 import converter.CoreConverter
 import defaults.DefaultConverter
@@ -9,7 +9,6 @@ import groovy.xml.MarkupBuilder
 import object.ParseResult
 import org.springframework.stereotype.Component
 import source.BlockSource
-import source.LineSource
 import source.Source
 
 @Component
@@ -37,22 +36,22 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
     }
 
     //todo to make three implementations (eachLiner, lazyBlocker, blocker)
-    //todo other settings can be added to FilterConfig, class can be renamed to StreamConfig
     @Override
     void createItems(MarkupBuilder xml, File file, boolean isd) {
         StreamConfig streamConfig = new StreamConfig(xml: xml, filterConditions: conditions, separator: ',')
 
-        use(EachLiner) {
+//        use(EachLiner) {
+//            file.withStreamConfig(streamConfig)
+//                .convertTo(LineSource.class, isd)
+//                .createItemsBy(this.&createItem)
+//        }
+
+        use(GreedBlocker) {
             file.withStreamConfig(streamConfig)
-                .convertTo(LineSource.class, isd)
+                .groupWith(this.&groupingMethod)
+                .convertTo(BlockSource.class, isd)
                 .createItemsBy(this.&createItem)
         }
-
-//        use(GreedBlocker) {
-//            file.withStreamConfig(xml, filterConfig)
-//                .convertTo(BlockSource.class)
-//                .createItemsBy(this.&createItem, this.&groupingMethod)
-//        }
     }
 
     @Override
@@ -61,19 +60,19 @@ class UnifiedConverterExample extends DefaultConverter implements CoreConverter 
             throw new PipelineException("exception by logic")
         }
 
-        String[] fields = source.fields
-
-        xml.ORDER {
-            NUMBER(fields[0])
-            TEXT(fields[1])
-        }
-
-//        source.block.each { fields ->
-//            xml.ORDER {
-//                NUMBER(fields[0])
-//                TEXT(fields[1])
-//            }
+//        String[] fields = source.fields
+//
+//        xml.ORDER {
+//            NUMBER(fields[0])
+//            TEXT(fields[1])
 //        }
+
+        source.block.each { fields ->
+            xml.ORDER {
+                NUMBER(fields[0])
+                TEXT(fields[1])
+            }
+        }
     }
 
     private static String groupingMethod(String[] fields) {
